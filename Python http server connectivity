@@ -1,0 +1,47 @@
+# Code Applied to connect to the html webpage 
+# Code is vulnerable to SQL injection for testing the login php page
+
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import urllib.parse
+import sqlite3
+
+class MyHandler(BaseHTTPRequestHandler):                           # Connect to the html webpage created through the http servers
+    def do_GET(self):
+        if self.path == '/':                                           
+            with open('index.html', 'rb') as f:
+                self.send_response(200)                                   
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                self.wfile.write(f.read())
+
+    def do_POST(self):
+        if self.path == '/login':                                                        #Obtains the username and password given by the user 
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            params = urllib.parse.parse_qs(post_data)
+            username = params.get('username', [''])[0]
+            password = params.get('password', [''])[0]
+
+            conn = sqlite3.connect('users.db                                                                # Connects to the SQLite3 database 
+            c = conn.cursor()
+            c.execute("SELECT * FROM users WHERE username=? AND password=?",(username,password))             # Line of code vulnerable to SQL injection 
+            print("[DEBUG] SQL QUERY:", query)
+            c.execute(query)
+            result = c.fetchone()
+            conn.close()
+
+            self.send_response(200)
+            self.end_headers()
+            if result:
+                self.wfile.write(b"Login successful!")
+            else:
+                self.wfile.write(b"Login failed!")
+
+def run():
+    server_address = ('', 9090)                                                               # Directs the webpage to the localhost port 9090
+    httpd = HTTPServer(server_address, MyHandler)
+    print("Server running at http://localhost:9090")
+    httpd.serve_forever()
+
+if __name__ == '__main__':
+    run()
