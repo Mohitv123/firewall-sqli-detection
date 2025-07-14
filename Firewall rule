@@ -1,0 +1,5 @@
+# Applied firewall rules to block suspecious traffic
+# Block SQLi payload to the particular http port
+sudo iptables -A INPUT -p tcp --dport 8080 -m string --algo bm --string "' OR" -j DROP
+# Log drop packets
+sudo iptables -A INPUT -p tcp --dport 8080 -m string --algo bm --string "' OR" -j LOG --log-prefix "SQLi BLOCKED: "
