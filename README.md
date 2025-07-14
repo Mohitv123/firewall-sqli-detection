@@ -1,1 +1,3 @@
 # firewall-sqli-detection
+This project demonstrates how a basic firewall setup can detect and block SQL Injection (SQLi) attacks on a web application using a combination of Linux-based firewall tools (iptables), network analyzers (Wireshark, tcpdump), and vulnerability testing tools (Burp Suite). The goal is to simulate real-world attack scenarios and learn how network-layer protection and logging can help identify malicious activity.
+#Disclaimer This project is intended for educational and research purposes only. All demonstrations and tests were run in a controlled environment only(Virtual box).
